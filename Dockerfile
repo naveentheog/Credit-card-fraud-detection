@@ -12,8 +12,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY api/ ./api/
 COPY models/ ./models/
+COPY streamlit_app.py .
 
 EXPOSE 8000
 
-# Run from /app so relative paths in api/main.py (../models) resolve correctly
+# Default command runs the FastAPI service. For a second Railway service running
+# Streamlit from this same image, override the start command in Railway's settings:
+#   streamlit run streamlit_app.py --server.port $PORT --server.address 0.0.0.0
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
