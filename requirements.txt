@@ -13,3 +13,4 @@ matplotlib
 streamlit
 requests
 prometheus-client
+httpx2
