@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest flake8
+
+      - name: Lint with flake8 (errors only, not style nitpicks)
+        run: |
+          flake8 api/ src/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: Run tests
+        run: |
+          pytest tests/ -v
+
+  build-docker:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build -t fraud-detection-api:${{ github.sha }} .
+
+      # Deliberately NOT pushing to a registry or deploying here - see the
+      # README for why: registry credentials and a real deploy target are a
+      # "when you actually have infra to deploy to" step, not something to
+      # fake in a portfolio project's CI. Everything up to a validated,
+      # buildable image is genuinely automated by this workflow.
+      - name: Confirm image builds and runs
+        run: |
+          docker run -d -p 8000:8000 --name test-container fraud-detection-api:${{ github.sha }}
+          sleep 5
+          curl -f http://localhost:8000/health || (docker logs test-container && exit 1)
+          docker stop test-container

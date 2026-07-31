@@ -1,0 +1,27 @@
+# Raw data is tracked by DVC (see data/raw/creditcard.csv.dvc), not committed directly to git
+data/raw/creditcard.csv
+
+# Processed data is regenerable via `dvc repro` / the notebooks - don't commit large derived files
+data/processed/*.csv
+data/processed/*.pkl
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# MLflow's local tracking DB and artifact store use absolute paths tied to this
+# machine - not portable across clones. Re-run the training notebooks to regenerate
+# locally. The actual deployable model (models/best_model.joblib) IS committed below.
+mlruns/
+notebooks/mlruns/
+
+# DVC cache (local object store, not meant to be committed)
+.dvc/cache
+.dvc/tmp
+
+# OS/editor cruft
+.DS_Store
+.vscode/
+.idea/

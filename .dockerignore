@@ -1,0 +1,9 @@
+data/
+notebooks/
+mlruns/
+monitoring/
+Interview-Knowledge-Base/
+__pycache__/
+*.pyc
+.git/
+.dvc/

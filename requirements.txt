@@ -1,0 +1,15 @@
+pandas
+numpy
+scikit-learn
+imbalanced-learn
+xgboost
+mlflow
+fastapi
+uvicorn[standard]
+joblib
+pydantic
+shap
+matplotlib
+streamlit
+requests
+prometheus-client

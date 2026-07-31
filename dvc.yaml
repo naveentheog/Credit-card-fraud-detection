@@ -1,0 +1,8 @@
+stages:
+  prepare_data:
+    cmd: python src/prepare_data.py
+    deps:
+      - src/prepare_data.py
+      - data/raw/creditcard.csv
+    outs:
+      - data/processed/creditcard_features.csv
